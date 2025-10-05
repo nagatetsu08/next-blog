@@ -1,11 +1,33 @@
-import { getPosts } from "@/lib/post"
+import { getPosts, searchPosts } from "@/lib/post"
 import PostCard from "@/components/post/PostCard"
 import { Post } from "@/types/post"
 
+// Next15以降は動的パラメータやURL、リクエストパラメータは全てPromise型で返ってくることになった。
+// そのため、以下（searchProps）のようにProps型を作ってやったほうが見やすい。
+// なお、引数時の型の形（{params}: {params: paramsの型}）はNext14より前から変わっていない
 
-export default async function PostsPage() {
-  const posts = await getPosts() as Post[] // 型アサーションでPostの配列型として強制している。つまり値がなくてもPosts[]が返ってくる。（nullpointerにならない）
+// indexとか動的パラメータじゃない時
+// {params}: {params: paramsの型}
+// 動的パラメータ、URLパラメータの時
+// {params}: {params: Promise<paramsの型>}
 
+type SearchParams = {
+  search?: string
+}
+
+type searchProps = {searchParams: Promise<SearchParams>}
+
+export default async function PostsPage({searchParams} : searchProps) {
+// export default async function PostsPage({searchParams}: {searchParams: Promise<SearchParams>}){
+
+  const resolveSearchParams = await searchParams;
+  const query = resolveSearchParams.search || ''
+
+  const posts = query 
+  ? await searchPosts(query) as Post[]
+  : await getPosts() as Post[]
+  // const posts = await getPosts() as Post[] // 型アサーションでPostの配列型として強制している。つまり値がなくてもPosts[]が返ってくる。（nullpointerにならない）
+  
   return (
     <>
       <div className="container mx-auto px-4 py-8">
