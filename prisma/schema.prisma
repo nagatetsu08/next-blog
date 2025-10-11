@@ -27,7 +27,7 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-// Posts
+// Post
 //@relation・・リレーション fields: [authorId]・・このモデルのどの列を使うか references:
 //[id]・・参照先(User)のどの列と紐付けるか
 //onDelete: Cascade ユーザーが削除された場合、ユーザー投稿も一緒に削除される

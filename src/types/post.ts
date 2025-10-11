@@ -4,6 +4,8 @@ export type Post = {
   content: string,
   topImage: string | null
   createdAt: Date
+  updatedAt: Date
+  published: boolean
   author : {
     name: string
   }

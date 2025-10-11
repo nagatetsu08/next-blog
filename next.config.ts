@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb' //uploadできるファイルのサイズを少し拡張
+    }
+  },
   eslint: {
     // この設定でビルド時にESLintエラー・警告があっても無視されます
     ignoreDuringBuilds: true,

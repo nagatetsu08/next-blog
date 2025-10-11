@@ -18,7 +18,8 @@ export default function Setting({session}: {session: Session}) {
 
   const handleLogout = async() => {
     'use server'
-    await signOut
+    console.log("aaa")
+    await signOut()
   }
 
   // 以下の書き方でも問題なし
