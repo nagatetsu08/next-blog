@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
-import { getPost } from "@/lib/post"
+import { getOwnPost } from "@/lib/ownPost"
+import { auth } from "@/auth"
 import {
   Card,
   CardContent,
@@ -22,7 +23,7 @@ import "highlight.js/styles/github.css"; // コードハイライト用のスタ
 
 // Nexyt15から
 type Params = {
-  params: Promise<{id: string}>
+  params: Promise<{postId: string}>
 }
 
 // Next14まで
@@ -30,9 +31,18 @@ type Params = {
 //   params: { id: string }
 // }
 
-export default async function PostPage({params}: Params) {
-  const {id} = await params
-  const post = await getPost(id)
+export default async function ShowPage({params}: Params) {
+
+  const session = await auth()
+  const userId = session?.user?.id
+
+  // ここでnullチェックをしないとgetOwnPostsでラーとなる（userIdがnullである可能性もあるから）
+  if(!session?.user?.email || !userId) {
+    throw new Error('不正なリクエストです')
+  }
+
+  const {postId} = await params
+  const post = await getOwnPost(userId, postId)
 
   if(!post) {
     notFound()
